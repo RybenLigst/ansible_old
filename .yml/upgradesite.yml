@@ -1,0 +1,27 @@
+---
+- name: Upload Webpage and Restart Apache
+  hosts: linux_server
+  become: yes
+
+  vars:
+    source_file: ./website/index.html
+    destin_file: /var/www/html
+
+  tasks:
+    - name: Copy webpage
+      copy:
+        src: "{{ source_file }}"
+        dest: "{{ destin_file }}"
+        mode: 0555
+      notify: Restart Apache
+
+  handlers:
+    - name: Unmask Apache service
+      systemd:
+        name: apache2
+        state: unmasked
+
+    - name: Restart Apache
+      systemd:
+        name: apache2
+        state: restarted
