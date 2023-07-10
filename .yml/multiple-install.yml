@@ -1,0 +1,36 @@
+---
+- name: install
+  hosts: linux_server
+  become: yes
+
+  tasks:
+
+    - name: Python pip install
+      apt:
+        name: python3-pip
+        state: present
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Java install
+      apt:
+        name: openjdk-11-jdk
+        state: present
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: AWS CLI install
+      pip:
+        name: awscli
+        state: present
+
+    - name: Docker install
+      apt:
+        name: docker.io
+        state: present
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: docker user
+      user:
+        name: root
+        groups: docker
+        append: yes
+
